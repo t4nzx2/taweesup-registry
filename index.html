@@ -361,8 +361,7 @@
     <div class="card no-print">
       <div class="btn-row">
         <button type="button" class="btn btn-reset" onclick="resetForm()">ล้างข้อมูล</button>
-        <button type="button" class="btn btn-secondary" onclick="exportJSON()">ดาวน์โหลด JSON</button>
-        <button type="button" class="btn btn-primary" onclick="submitForm()">บันทึกและส่งออก (พิมพ์)</button>
+        <button type="button" class="btn btn-primary" onclick="submitForm()" id="submitBtn">ส่งใบสมัคร</button>
       </div>
       <div id="msg" class="msg"></div>
     </div>
@@ -569,26 +568,33 @@ function showMsg(text, type) {
   setTimeout(() => { m.className = 'msg'; }, 4000);
 }
 
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoq-JTnTT-kfYcq539KEvT969Tm7Lf_0kywLdAp96t0UYfAM3b-15NeRXUKJyxv_AtSQ/exec';
+
 function submitForm() {
   const err = validateForm();
   if (err) { showMsg(err, 'error'); return; }
   const d = getFormData();
-  fillPrintArea(d);
-  window.print();
-}
 
-function exportJSON() {
-  const err = validateForm();
-  if (err) { showMsg(err, 'error'); return; }
-  const d = getFormData();
-  const json = JSON.stringify(d, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const name = (d.fname + '_' + d.lname).replace(/\s+/g,'_') || 'application';
-  a.href = url; a.download = name + '.json'; a.click();
-  URL.revokeObjectURL(url);
-  showMsg('ดาวน์โหลดไฟล์ JSON สำเร็จ', 'success');
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'กำลังส่ง...';
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(d)
+  })
+  .then(() => {
+    showMsg('ส่งใบสมัครสำเร็จ! ข้อมูลถูกบันทึกใน Google Sheets แล้ว', 'success');
+    btn.textContent = 'ส่งใบสมัคร';
+    btn.disabled = false;
+  })
+  .catch(() => {
+    showMsg('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', 'error');
+    btn.textContent = 'ส่งใบสมัคร';
+    btn.disabled = false;
+  });
 }
 
 function previewDoc(input, previewId) {
