@@ -238,7 +238,7 @@
       <div class="section-title">ประสบการณ์และความสามารถ</div>
       <div class="grid grid-2" style="margin-bottom:14px">
         <div class="field">
-          <label>คุณเคยผ่านงานขายมาหรือไม่</label>
+          <label>คุณเคยผ่านงานขายมาหรือไม่ *</label>
           <div class="radio-group">
             <label><input type="radio" name="hasSales" value="เคย"> เคย</label>
             <label><input type="radio" name="hasSales" value="ไม่เคย"> ไม่เคย</label>
@@ -251,14 +251,14 @@
       </div>
       <div class="grid grid-2" style="margin-bottom:14px">
         <div class="field">
-          <label>สามารถเปลี่ยนสาขาได้หรือไม่</label>
+          <label>สามารถเปลี่ยนสาขาได้หรือไม่ *</label>
           <div class="radio-group">
             <label><input type="radio" name="canRead" value="ได้"> ได้</label>
             <label><input type="radio" name="canRead" value="ไม่ได้"> ไม่ได้</label>
           </div>
         </div>
         <div class="field">
-          <label>สามารถทำงานวันอาทิตย์ได้หรือไม่</label>
+          <label>สามารถทำงานวันอาทิตย์ได้หรือไม่ *</label>
           <div class="radio-group">
             <label><input type="radio" name="canSunday" value="ได้"> ได้</label>
             <label><input type="radio" name="canSunday" value="ไม่ได้"> ไม่ได้</label>
@@ -303,7 +303,7 @@
       <div class="docs-grid">
 
         <div class="doc-item">
-          <label class="doc-label"><input type="checkbox" name="docId"> สำเนาบัตรประชาชน</label>
+          <label class="doc-label"><input type="checkbox" name="docId"> สำเนาบัตรประชาชน *</label>
           <label class="doc-upload-btn">
             <span>📎 เพิ่มไฟล์รูปภาพ</span>
             <input type="file" accept="image/*" onchange="previewDoc(this,'prevId')">
@@ -316,7 +316,7 @@
         </div>
 
         <div class="doc-item">
-          <label class="doc-label"><input type="checkbox" name="docHouse"> สำเนาทะเบียนบ้าน</label>
+          <label class="doc-label"><input type="checkbox" name="docHouse"> สำเนาทะเบียนบ้าน *</label>
           <label class="doc-upload-btn">
             <span>📎 เพิ่มไฟล์รูปภาพ</span>
             <input type="file" accept="image/*" onchange="previewDoc(this,'prevHouse')">
@@ -342,7 +342,7 @@
         </div>
 
         <div class="doc-item">
-          <label class="doc-label"><input type="checkbox" name="docPhoto"> รูปถ่าย</label>
+          <label class="doc-label"><input type="checkbox" name="docPhoto"> รูปถ่าย *</label>
           <label class="doc-upload-btn">
             <span>📎 เพิ่มไฟล์รูปภาพ</span>
             <input type="file" accept="image/*" onchange="previewDoc(this,'prevPhoto')">
@@ -488,6 +488,12 @@ function validateForm() {
   if (!d.lname) return 'กรุณากรอกนามสกุล';
   if (!d.age)   return 'กรุณากรอกอายุ';
   if (!d.phone) return 'กรุณากรอกเบอร์มือถือ';
+  if (!getRadio('hasSales'))  return 'กรุณาเลือก: คุณเคยผ่านงานขายมาหรือไม่';
+  if (!getRadio('canRead'))   return 'กรุณาเลือก: สามารถเปลี่ยนสาขาได้หรือไม่';
+  if (!getRadio('canSunday')) return 'กรุณาเลือก: สามารถทำงานวันอาทิตย์ได้หรือไม่';
+  if (!document.querySelector('[name="docId"]').checked)    return 'กรุณาแนบสำเนาบัตรประชาชน';
+  if (!document.querySelector('[name="docHouse"]').checked) return 'กรุณาแนบสำเนาทะเบียนบ้าน';
+  if (!document.querySelector('[name="docPhoto"]').checked) return 'กรุณาแนบรูปถ่าย';
   return null;
 }
 
