@@ -78,6 +78,26 @@
   .msg.success { background: #d4edda; color: #155724; display: block; }
   .msg.error   { background: #f8d7da; color: #721c24; display: block; }
 
+  /* ---- RESPONSIVE MOBILE ---- */
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    .page-wrapper { margin: 12px auto; padding: 10px; }
+    h1 { font-size: 22px; }
+    .subtitle { font-size: 15px; }
+    .card { padding: 18px 14px; }
+    .section-title { font-size: 16px; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .emergency-block .grid { grid-template-columns: 1fr; }
+    .docs-grid { grid-template-columns: 1fr; }
+    .field label { font-size: 15px; }
+    .field input, .field select, .field textarea { font-size: 16px; padding: 10px 12px; }
+    .radio-group { gap: 14px; }
+    .radio-group label { font-size: 16px; }
+    .btn { font-size: 16px; padding: 12px 20px; width: 100%; }
+    .btn-row { flex-direction: column; }
+    .emergency-block > div:first-child { font-size: 15px; }
+  }
+
   /* ---- PRINT STYLES ---- */
   @media print {
     body { background: #fff; font-size: 11pt; }
