@@ -570,6 +570,8 @@ function showMsg(text, type) {
   setTimeout(() => { m.className = 'msg'; }, 4000);
 }
 
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoq-JTnTT-kfYcq539KEvT969Tm7Lf_0kywLdAp96t0UYfAM3b-15NeRXUKJyxv_AtSQ/exec';
+
 function downloadImage() {
   const err = validateForm();
   if (err) { showMsg(err, 'error'); return; }
@@ -596,32 +598,39 @@ function downloadImage() {
   });
 }
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoq-JTnTT-kfYcq539KEvT969Tm7Lf_0kywLdAp96t0UYfAM3b-15NeRXUKJyxv_AtSQ/exec';
-
 function submitForm() {
   const err = validateForm();
   if (err) { showMsg(err, 'error'); return; }
   const d = getFormData();
+  fillPrintArea(d);
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'กำลังส่ง...';
+  btn.textContent = 'กำลังสร้างรูปและส่ง...';
 
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(d)
-  })
-  .then(() => {
-    showMsg('ส่งใบสมัครสำเร็จ! ข้อมูลถูกบันทึกใน Google Sheets แล้ว', 'success');
-    btn.textContent = 'ส่งใบสมัคร';
-    btn.disabled = false;
-  })
-  .catch(() => {
-    showMsg('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', 'error');
-    btn.textContent = 'ส่งใบสมัคร';
-    btn.disabled = false;
+  const area = document.getElementById('printArea');
+  area.style.display = 'block';
+
+  html2canvas(area, { scale: 2, useCORS: true, backgroundColor: '#fff' }).then(canvas => {
+    area.style.display = 'none';
+    d.imageBase64 = canvas.toDataURL('image/png');
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(d)
+    })
+    .then(() => {
+      showMsg('ส่งใบสมัครสำเร็จ! ข้อมูลและรูปภาพถูกบันทึกใน Google Sheets แล้ว', 'success');
+      btn.textContent = 'ส่งใบสมัคร';
+      btn.disabled = false;
+    })
+    .catch(() => {
+      showMsg('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', 'error');
+      btn.textContent = 'ส่งใบสมัคร';
+      btn.disabled = false;
+    });
   });
 }
 
