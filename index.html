@@ -361,6 +361,7 @@
     <div class="card no-print">
       <div class="btn-row">
         <button type="button" class="btn btn-reset" onclick="resetForm()">ล้างข้อมูล</button>
+        <button type="button" class="btn btn-secondary" onclick="downloadImage()" id="imgBtn">ดาวน์โหลดรูปภาพ</button>
         <button type="button" class="btn btn-primary" onclick="submitForm()" id="submitBtn">ส่งใบสมัคร</button>
       </div>
       <div id="msg" class="msg"></div>
@@ -436,6 +437,7 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 // Dynamic children age fields
 document.getElementById('childrenCount').addEventListener('input', function() {
@@ -566,6 +568,32 @@ function showMsg(text, type) {
   m.textContent = text;
   m.className = 'msg ' + type;
   setTimeout(() => { m.className = 'msg'; }, 4000);
+}
+
+function downloadImage() {
+  const err = validateForm();
+  if (err) { showMsg(err, 'error'); return; }
+  const d = getFormData();
+  fillPrintArea(d);
+
+  const btn = document.getElementById('imgBtn');
+  btn.disabled = true;
+  btn.textContent = 'กำลังสร้างรูป...';
+
+  const area = document.getElementById('printArea');
+  area.style.display = 'block';
+
+  html2canvas(area, { scale: 2, useCORS: true, backgroundColor: '#fff' }).then(canvas => {
+    const link = document.createElement('a');
+    const name = (d.fname + '_' + d.lname).replace(/\s+/g,'_') || 'ใบสมัคร';
+    link.download = name + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    area.style.display = 'none';
+    btn.disabled = false;
+    btn.textContent = 'ดาวน์โหลดรูปภาพ';
+    showMsg('ดาวน์โหลดรูปภาพสำเร็จ', 'success');
+  });
 }
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoq-JTnTT-kfYcq539KEvT969Tm7Lf_0kywLdAp96t0UYfAM3b-15NeRXUKJyxv_AtSQ/exec';
