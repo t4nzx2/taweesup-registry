@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบสมัครห้างทองทวีทรัพย์</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sarabun', 'TH Sarabun New', Arial, sans-serif; font-size: 18px; font-weight: 600; background: #f0f2f5; color: #222; }
+
+  .page-wrapper { max-width: 900px; margin: 30px auto; padding: 20px; }
+
+  h1 { text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+  .subtitle { text-align: center; color: #555; margin-bottom: 24px; font-size: 17px; font-weight: 600; }
+
+  .card { background: #fff; border-radius: 10px; padding: 28px 32px; box-shadow: 0 2px 8px rgba(0,0,0,.08); margin-bottom: 20px; }
+  .section-title { font-size: 18px; font-weight: 800; color: #8B0000; border-bottom: 2px solid #8B0000; padding-bottom: 5px; margin-bottom: 16px; }
+
+  .grid { display: grid; gap: 14px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 16px; color: #333; font-weight: 700; }
+  .field input, .field select, .field textarea {
+    border: 1.5px solid #ccc; border-radius: 6px; padding: 9px 12px;
+    font-size: 17px; font-weight: 600; font-family: inherit;
+    transition: border-color .2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; border-color: #8B0000;
+  }
+  .field textarea { resize: vertical; min-height: 70px; }
+
+  .radio-group { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; padding: 8px 0; }
+  .radio-group label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 17px; font-weight: 600; }
+  .radio-group input[type=radio] { width: 18px; height: 18px; cursor: pointer; }
+
+  .children-ages { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .children-ages input { width: 80px; }
+
+  .emergency-block { border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+  .emergency-block .grid { grid-template-columns: 2fr 1fr 1fr; }
+  .emergency-block > div:first-child { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+
+  /* เอกสารแนบ */
+  .docs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .doc-item { border: 1.5px solid #ddd; border-radius: 10px; padding: 16px; }
+  .doc-item label.doc-label { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; margin-bottom: 12px; cursor: pointer; }
+  .doc-item label.doc-label input[type=checkbox] { width: 20px; height: 20px; cursor: pointer; }
+  .doc-upload-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f5f5f5; border: 1.5px dashed #aaa; border-radius: 8px;
+    padding: 10px 16px; cursor: pointer; font-size: 15px; font-weight: 600;
+    color: #555; width: 100%; justify-content: center; transition: .2s;
+  }
+  .doc-upload-btn:hover { background: #ffe8e8; border-color: #8B0000; color: #8B0000; }
+  .doc-upload-btn input[type=file] { display: none; }
+  .doc-preview { margin-top: 10px; display: none; }
+  .doc-preview img { max-width: 100%; max-height: 160px; border-radius: 6px; border: 1px solid #ddd; object-fit: cover; }
+  .doc-preview .doc-filename { font-size: 13px; color: #666; margin-top: 4px; word-break: break-all; }
+  .doc-remove { background: none; border: none; color: #c00; cursor: pointer; font-size: 13px; font-weight: 700; margin-top: 4px; padding: 0; }
+
+  .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+  .btn {
+    padding: 13px 36px; border: none; border-radius: 8px; cursor: pointer;
+    font-size: 17px; font-family: inherit; font-weight: 800; transition: .2s;
+  }
+  .btn-primary { background: #8B0000; color: #fff; }
+  .btn-primary:hover { background: #6a0000; }
+  .btn-secondary { background: #555; color: #fff; }
+  .btn-secondary:hover { background: #333; }
+  .btn-reset { background: #e0e0e0; color: #333; }
+  .btn-reset:hover { background: #ccc; }
+
+  .msg { display: none; text-align: center; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 14px; }
+  .msg.success { background: #d4edda; color: #155724; display: block; }
+  .msg.error   { background: #f8d7da; color: #721c24; display: block; }
+
+  /* ---- PRINT STYLES ---- */
+  @media print {
+    body { background: #fff; font-size: 11pt; }
+    .page-wrapper { margin: 0; padding: 0; max-width: 100%; }
+    .no-print { display: none !important; }
+    .card { box-shadow: none; border: none; padding: 10px 0; margin-bottom: 8px; }
+    .print-area { display: block !important; }
+    .form-area { display: none !important; }
+  }
+
+  /* ---- PRINT PREVIEW ---- */
+  .print-area {
+    display: none;
+    font-size: 12pt;
+    font-family: 'TH Sarabun New', 'Sarabun', Arial, sans-serif;
+  }
+  .print-area h2 { text-align: center; font-size: 16pt; margin-bottom: 4px; }
+  .print-area .date-line { text-align: center; margin-bottom: 12px; font-size: 11pt; }
+  .print-area table { width: 100%; border-collapse: collapse; }
+  .print-area td { padding: 4px 6px; vertical-align: top; }
+  .print-area .label { font-weight: bold; white-space: nowrap; min-width: 140px; }
+  .print-area .dots { border-bottom: 1px dotted #000; display: inline-block; min-width: 160px; }
+  .print-area .section { font-weight: bold; margin-top: 10px; border-bottom: 1px solid #000; }
+  .print-area .photo-box {
+    border: 1px solid #000; width: 100px; height: 130px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10pt; color: #888; float: right; margin-left: 10px;
+  }
+  .print-area .sign-line { margin-top: 40px; text-align: center; }
+  .print-area .sign-line span { display: inline-block; border-top: 1px solid #000; min-width: 200px; padding-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ===== FORM AREA ===== -->
+<div class="page-wrapper form-area" id="formArea">
+  <h1>ใบสมัครงาน</h1>
+  <p class="subtitle">ห้างทองทวีทรัพย์ — กรอกข้อมูลให้ครบถ้วนแล้วกด "บันทึกและส่งออก"</p>
+
+  <form id="appForm" novalidate>
+
+    <!-- ข้อมูลส่วนตัว -->
+    <div class="card">
+      <div class="section-title">ข้อมูลส่วนตัว</div>
+      <div class="grid grid-4" style="margin-bottom:14px">
+        <div class="field"><label>ชื่อ *</label><input name="fname" required></div>
+        <div class="field"><label>นามสกุล *</label><input name="lname" required></div>
+        <div class="field"><label>อายุ (ปี) *</label><input name="age" type="number" min="15" max="80" required></div>
+        <div class="field"><label>วันที่สมัคร</label><input name="applyDate" type="date"></div>
+      </div>
+      <div class="grid grid-3" style="margin-bottom:14px">
+        <div class="field"><label>ตำแหน่งที่สมัคร</label><input name="position"></div>
+        <div class="field"><label>เงินเดือนที่ต้องการ (บาท)</label><input name="salary" type="number"></div>
+        <div class="field"><label>สถานะภาพ</label>
+          <div class="radio-group">
+            <label><input type="radio" name="status" value="โสด"> โสด</label>
+            <label><input type="radio" name="status" value="สมรส"> สมรส</label>
+            <label><input type="radio" name="status" value="หย่าร้าง"> หย่าร้าง</label>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-3" style="margin-bottom:14px">
+        <div class="field"><label>การศึกษาสูงสุด</label><input name="education"></div>
+        <div class="field"><label>สาขาวิชา</label><input name="major"></div>
+        <div class="field"><label>จำนวนบุตร (คน)</label><input name="childrenCount" type="number" min="0" max="20" id="childrenCount"></div>
+      </div>
+      <div class="field" id="childrenAgeField" style="display:none;margin-bottom:14px">
+        <label>อายุบุตร</label>
+        <div class="children-ages" id="childrenAges"></div>
+      </div>
+    </div>
+
+    <!-- ที่อยู่ -->
+    <div class="card">
+      <div class="section-title">ที่อยู่ปัจจุบัน</div>
+      <div class="grid grid-4" style="margin-bottom:14px">
+        <div class="field"><label>บ้านเลขที่</label><input name="houseNo"></div>
+        <div class="field"><label>หมู่</label><input name="moo"></div>
+        <div class="field"><label>ตรอก/ซอย</label><input name="soi"></div>
+        <div class="field"><label>ถนน</label><input name="road"></div>
+      </div>
+      <div class="grid grid-3" style="margin-bottom:14px">
+        <div class="field"><label>ตำบล/แขวง</label><input name="tambon"></div>
+        <div class="field"><label>อำเภอ/เขต</label><input name="amphoe"></div>
+        <div class="field"><label>จังหวัด</label><input name="province"></div>
+      </div>
+      <div class="field" style="margin-bottom:14px">
+        <label>อาศัยอยู่กับ</label>
+        <div class="radio-group">
+          <label><input type="radio" name="living" value="ครอบครัว"> ครอบครัว</label>
+          <label><input type="radio" name="living" value="บ้านเช่า"> บ้านเช่า</label>
+          <label><input type="radio" name="living" value="อื่นๆ"> อื่นๆ</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ช่องทางติดต่อ -->
+    <div class="card">
+      <div class="section-title">ช่องทางติดต่อ</div>
+      <div class="grid grid-3">
+        <div class="field"><label>เลขบัตรประชาชน *</label><input name="idCard" maxlength="13" required></div>
+        <div class="field"><label>มือถือ *</label><input name="phone" type="tel" required></div>
+        <div class="field"><label>เฟสบุ๊ค</label><input name="facebook"></div>
+        <div class="field"><label>ไอดีไลน์</label><input name="lineId"></div>
+      </div>
+    </div>
+
+    <!-- ประวัติครอบครัว -->
+    <div class="card">
+      <div class="section-title">ประวัติครอบครัว</div>
+      <div class="grid grid-3" style="margin-bottom:14px">
+        <div class="field"><label>ชื่อ-สกุล บิดา</label><input name="fatherName"></div>
+        <div class="field"><label>อายุ บิดา (ปี)</label><input name="fatherAge" type="number"></div>
+        <div class="field"><label>อาชีพ บิดา</label><input name="fatherOcc"></div>
+      </div>
+      <div class="grid grid-3" style="margin-bottom:14px">
+        <div class="field"><label>ชื่อ-สกุล มารดา</label><input name="motherName"></div>
+        <div class="field"><label>อายุ มารดา (ปี)</label><input name="motherAge" type="number"></div>
+        <div class="field"><label>อาชีพ มารดา</label><input name="motherOcc"></div>
+      </div>
+      <div class="grid grid-3" style="margin-bottom:14px">
+        <div class="field"><label>ชื่อ-สกุล สามี/ภรรยา</label><input name="spouseName"></div>
+        <div class="field"><label>อายุ สามี/ภรรยา (ปี)</label><input name="spouseAge" type="number"></div>
+        <div class="field"><label>อาชีพ สามี/ภรรยา</label><input name="spouseOcc"></div>
+      </div>
+      <div class="grid grid-3">
+        <div class="field"><label>จำนวนพี่น้องทั้งหมด (รวมผู้สมัคร)</label><input name="siblings" type="number" min="0"></div>
+        <div class="field"><label>ชาย (คน)</label><input name="siblingsM" type="number" min="0"></div>
+        <div class="field"><label>หญิง (คน)</label><input name="siblingsF" type="number" min="0"></div>
+      </div>
+    </div>
+
+    <!-- ประสบการณ์ -->
+    <div class="card">
+      <div class="section-title">ประสบการณ์และความสามารถ</div>
+      <div class="grid grid-2" style="margin-bottom:14px">
+        <div class="field">
+          <label>คุณเคยผ่านงานขายมาหรือไม่</label>
+          <div class="radio-group">
+            <label><input type="radio" name="hasSales" value="เคย"> เคย</label>
+            <label><input type="radio" name="hasSales" value="ไม่เคย"> ไม่เคย</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>ถ้าเคย ระบุสาขา / ประเภทสินค้า</label>
+          <input name="salesDetail">
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-bottom:14px">
+        <div class="field">
+          <label>สามารถอ่านสาขาได้หรือไม่</label>
+          <div class="radio-group">
+            <label><input type="radio" name="canRead" value="ได้"> ได้</label>
+            <label><input type="radio" name="canRead" value="ไม่ได้"> ไม่ได้</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>สามารถทำงานวันอาทิตย์ได้หรือไม่</label>
+          <div class="radio-group">
+            <label><input type="radio" name="canSunday" value="ได้"> ได้</label>
+            <label><input type="radio" name="canSunday" value="ไม่ได้"> ไม่ได้</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ประวัติการทำงาน -->
+    <div class="card">
+      <div class="section-title">ประวัติการทำงาน</div>
+      <div class="grid grid-2" style="margin-bottom:14px">
+        <div class="field"><label>งานที่ 1 (สถานที่ / ตำแหน่ง / ช่วงเวลา)</label><textarea name="work1"></textarea></div>
+        <div class="field"><label>งานที่ 2 (สถานที่ / ตำแหน่ง / ช่วงเวลา)</label><textarea name="work2"></textarea></div>
+      </div>
+    </div>
+
+    <!-- ติดต่อฉุกเฉิน -->
+    <div class="card">
+      <div class="section-title">กรณีฉุกเฉิน — บุคคลที่สามารถติดต่อได้</div>
+      <div class="emergency-block">
+        <div style="font-size:13px;font-weight:bold;margin-bottom:8px">คนที่ 1</div>
+        <div class="grid" style="grid-template-columns:2fr 1fr 1fr">
+          <div class="field"><label>ชื่อ-สกุล</label><input name="em1Name"></div>
+          <div class="field"><label>เบอร์โทร</label><input name="em1Phone" type="tel"></div>
+          <div class="field"><label>เฟสบุ๊ค</label><input name="em1Fb"></div>
+        </div>
+      </div>
+      <div class="emergency-block">
+        <div style="font-size:13px;font-weight:bold;margin-bottom:8px">คนที่ 2</div>
+        <div class="grid" style="grid-template-columns:2fr 1fr 1fr">
+          <div class="field"><label>ชื่อ-สกุล</label><input name="em2Name"></div>
+          <div class="field"><label>เบอร์โทร</label><input name="em2Phone" type="tel"></div>
+          <div class="field"><label>เฟสบุ๊ค</label><input name="em2Fb"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- เอกสาร -->
+    <div class="card">
+      <div class="section-title">เอกสารที่แนบมา</div>
+      <div class="docs-grid">
+
+        <div class="doc-item">
+          <label class="doc-label"><input type="checkbox" name="docId"> สำเนาบัตรประชาชน</label>
+          <label class="doc-upload-btn">
+            <span>📎 เพิ่มไฟล์รูปภาพ</span>
+            <input type="file" accept="image/*" onchange="previewDoc(this,'prevId')">
+          </label>
+          <div class="doc-preview" id="prevId">
+            <img id="prevId_img" src="" alt="">
+            <div class="doc-filename" id="prevId_name"></div>
+            <button class="doc-remove" onclick="removeDoc('prevId','docId')">✕ ลบไฟล์</button>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <label class="doc-label"><input type="checkbox" name="docHouse"> สำเนาทะเบียนบ้าน</label>
+          <label class="doc-upload-btn">
+            <span>📎 เพิ่มไฟล์รูปภาพ</span>
+            <input type="file" accept="image/*" onchange="previewDoc(this,'prevHouse')">
+          </label>
+          <div class="doc-preview" id="prevHouse">
+            <img id="prevHouse_img" src="" alt="">
+            <div class="doc-filename" id="prevHouse_name"></div>
+            <button class="doc-remove" onclick="removeDoc('prevHouse','docHouse')">✕ ลบไฟล์</button>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <label class="doc-label"><input type="checkbox" name="docEdu"> วุฒิการศึกษา</label>
+          <label class="doc-upload-btn">
+            <span>📎 เพิ่มไฟล์รูปภาพ</span>
+            <input type="file" accept="image/*" onchange="previewDoc(this,'prevEdu')">
+          </label>
+          <div class="doc-preview" id="prevEdu">
+            <img id="prevEdu_img" src="" alt="">
+            <div class="doc-filename" id="prevEdu_name"></div>
+            <button class="doc-remove" onclick="removeDoc('prevEdu','docEdu')">✕ ลบไฟล์</button>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <label class="doc-label"><input type="checkbox" name="docPhoto"> รูปถ่าย</label>
+          <label class="doc-upload-btn">
+            <span>📎 เพิ่มไฟล์รูปภาพ</span>
+            <input type="file" accept="image/*" onchange="previewDoc(this,'prevPhoto')">
+          </label>
+          <div class="doc-preview" id="prevPhoto">
+            <img id="prevPhoto_img" src="" alt="">
+            <div class="doc-filename" id="prevPhoto_name"></div>
+            <button class="doc-remove" onclick="removeDoc('prevPhoto','docPhoto')">✕ ลบไฟล์</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ปุ่ม -->
+    <div class="card no-print">
+      <div class="btn-row">
+        <button type="button" class="btn btn-reset" onclick="resetForm()">ล้างข้อมูล</button>
+        <button type="button" class="btn btn-secondary" onclick="exportJSON()">ดาวน์โหลด JSON</button>
+        <button type="button" class="btn btn-primary" onclick="submitForm()">บันทึกและส่งออก (พิมพ์)</button>
+      </div>
+      <div id="msg" class="msg"></div>
+    </div>
+
+  </form>
+</div>
+
+<!-- ===== PRINT AREA ===== -->
+<div class="print-area" id="printArea">
+  <h2>ใบสมัครห้างทองทวีทรัพย์</h2>
+  <div class="date-line">วันที่สมัคร: <span id="p_date"></span></div>
+
+  <div style="overflow:hidden">
+    <div class="photo-box">รูปถ่าย</div>
+    <table>
+      <tr><td class="label">ชื่อ-นามสกุล</td><td><span class="dots" id="p_fullname"></span></td>
+          <td class="label">อายุ</td><td><span class="dots" id="p_age"></span> ปี</td></tr>
+      <tr><td class="label">เลขบัตรประชาชน</td><td><span class="dots" id="p_idCard"></span></td>
+          <td class="label">มือถือ</td><td><span class="dots" id="p_phone"></span></td></tr>
+      <tr><td class="label">ตำแหน่งที่สมัคร</td><td><span class="dots" id="p_position"></span></td>
+          <td class="label">เงินเดือนที่ต้องการ</td><td><span class="dots" id="p_salary"></span> บาท</td></tr>
+      <tr><td class="label">การศึกษาสูงสุด</td><td><span class="dots" id="p_education"></span></td>
+          <td class="label">สาขาวิชา</td><td><span class="dots" id="p_major"></span></td></tr>
+      <tr><td class="label">สถานะภาพ</td><td><span class="dots" id="p_status"></span></td>
+          <td class="label">จำนวนบุตร</td><td><span class="dots" id="p_children"></span></td></tr>
+      <tr><td class="label">เฟสบุ๊ค</td><td><span class="dots" id="p_facebook"></span></td>
+          <td class="label">ไอดีไลน์</td><td><span class="dots" id="p_lineId"></span></td></tr>
+      <tr><td class="label" colspan="2">ที่อยู่ปัจจุบัน</td>
+          <td colspan="2"><span class="dots" id="p_address" style="min-width:300px"></span></td></tr>
+      <tr><td class="label">อาศัยอยู่กับ</td><td colspan="3"><span class="dots" id="p_living"></span></td></tr>
+    </table>
+
+    <div class="section">ประวัติครอบครัว</div>
+    <table>
+      <tr><td class="label">บิดา</td><td><span class="dots" id="p_father"></span></td></tr>
+      <tr><td class="label">มารดา</td><td><span class="dots" id="p_mother"></span></td></tr>
+      <tr><td class="label">สามี/ภรรยา</td><td><span class="dots" id="p_spouse"></span></td></tr>
+      <tr><td class="label">จำนวนพี่น้อง</td><td><span class="dots" id="p_siblings"></span></td></tr>
+    </table>
+
+    <div class="section">ประสบการณ์และความสามารถ</div>
+    <table>
+      <tr><td class="label">เคยผ่านงานขาย</td><td><span class="dots" id="p_hasSales"></span></td>
+          <td class="label">รายละเอียด</td><td><span class="dots" id="p_salesDetail"></span></td></tr>
+      <tr><td class="label">อ่านสาขาได้</td><td><span class="dots" id="p_canRead"></span></td>
+          <td class="label">ทำงานวันอาทิตย์ได้</td><td><span class="dots" id="p_canSunday"></span></td></tr>
+    </table>
+
+    <div class="section">ประวัติการทำงาน</div>
+    <table>
+      <tr><td class="label" style="vertical-align:top">งานที่ 1</td>
+          <td><span id="p_work1" style="white-space:pre-wrap"></span></td></tr>
+      <tr><td class="label" style="vertical-align:top">งานที่ 2</td>
+          <td><span id="p_work2" style="white-space:pre-wrap"></span></td></tr>
+    </table>
+
+    <div class="section">บุคคลติดต่อฉุกเฉิน</div>
+    <table>
+      <tr><td class="label">คนที่ 1</td>
+          <td>ชื่อ: <span class="dots" id="p_em1Name"></span> โทร: <span class="dots" id="p_em1Phone"></span> FB: <span class="dots" id="p_em1Fb"></span></td></tr>
+      <tr><td class="label">คนที่ 2</td>
+          <td>ชื่อ: <span class="dots" id="p_em2Name"></span> โทร: <span class="dots" id="p_em2Phone"></span> FB: <span class="dots" id="p_em2Fb"></span></td></tr>
+    </table>
+
+    <div class="section">เอกสารที่แนบมา</div>
+    <p id="p_docs" style="padding:6px 0"></p>
+
+    <div class="sign-line">
+      <p>ลงชื่อ <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ผู้สมัคร</p>
+      <p style="margin-top:4px">วันที่ <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Dynamic children age fields
+document.getElementById('childrenCount').addEventListener('input', function() {
+  const n = parseInt(this.value) || 0;
+  const container = document.getElementById('childrenAges');
+  const field = document.getElementById('childrenAgeField');
+  container.innerHTML = '';
+  field.style.display = n > 0 ? 'flex' : 'none';
+  for (let i = 1; i <= Math.min(n, 10); i++) {
+    const inp = document.createElement('input');
+    inp.name = 'childAge_' + i;
+    inp.placeholder = 'คนที่ ' + i;
+    inp.type = 'number'; inp.min = '0'; inp.max = '30';
+    container.appendChild(inp);
+  }
+});
+
+function getVal(name) {
+  const el = document.querySelector('[name="' + name + '"]');
+  if (!el) return '';
+  if (el.type === 'radio') {
+    const checked = document.querySelector('[name="' + name + '"]:checked');
+    return checked ? checked.value : '';
+  }
+  if (el.type === 'checkbox') return el.checked ? 'มี' : 'ไม่มี';
+  return el.value.trim();
+}
+
+function getRadio(name) {
+  const checked = document.querySelector('[name="' + name + '"]:checked');
+  return checked ? checked.value : '-';
+}
+
+function getFormData() {
+  const form = document.getElementById('appForm');
+  const data = {};
+  const inputs = form.querySelectorAll('input:not([type=radio]):not([type=checkbox]), textarea, select');
+  inputs.forEach(el => { if (el.name) data[el.name] = el.value.trim(); });
+  ['status','living','hasSales','canRead','canSunday'].forEach(n => { data[n] = getRadio(n); });
+  ['docId','docHouse','docEdu','docPhoto'].forEach(n => {
+    data[n] = document.querySelector('[name="' + n + '"]').checked;
+  });
+  return data;
+}
+
+function validateForm() {
+  const d = getFormData();
+  if (!d.fname) return 'กรุณากรอกชื่อ';
+  if (!d.lname) return 'กรุณากรอกนามสกุล';
+  if (!d.age)   return 'กรุณากรอกอายุ';
+  if (!d.phone) return 'กรุณากรอกเบอร์มือถือ';
+  return null;
+}
+
+function fillPrintArea(d) {
+  const today = d.applyDate || new Date().toLocaleDateString('th-TH');
+  document.getElementById('p_date').textContent = today;
+  document.getElementById('p_fullname').textContent = (d.fname + ' ' + d.lname) || '-';
+  document.getElementById('p_age').textContent = d.age || '-';
+  document.getElementById('p_idCard').textContent = d.idCard || '-';
+  document.getElementById('p_phone').textContent = d.phone || '-';
+  document.getElementById('p_position').textContent = d.position || '-';
+  document.getElementById('p_salary').textContent = d.salary || '-';
+  document.getElementById('p_education').textContent = d.education || '-';
+  document.getElementById('p_major').textContent = d.major || '-';
+  document.getElementById('p_status').textContent = d.status || '-';
+  document.getElementById('p_facebook').textContent = d.facebook || '-';
+  document.getElementById('p_lineId').textContent = d.lineId || '-';
+  document.getElementById('p_living').textContent = d.living || '-';
+
+  // Children
+  const cc = parseInt(d.childrenCount) || 0;
+  let childStr = cc + ' คน';
+  if (cc > 0) {
+    const ages = [];
+    for (let i = 1; i <= Math.min(cc,10); i++) {
+      if (d['childAge_' + i]) ages.push('คนที่ ' + i + ': ' + d['childAge_' + i] + ' ปี');
+    }
+    if (ages.length) childStr += ' (' + ages.join(', ') + ')';
+  }
+  document.getElementById('p_children').textContent = childStr;
+
+  // Address
+  const addr = [d.houseNo && 'บ้านเลขที่ '+d.houseNo, d.moo && 'หมู่ '+d.moo,
+    d.soi && 'ซอย '+d.soi, d.road && 'ถ.'+d.road,
+    d.tambon && 'ต.'+d.tambon, d.amphoe && 'อ.'+d.amphoe, d.province].filter(Boolean).join(' ');
+  document.getElementById('p_address').textContent = addr || '-';
+
+  // Family
+  document.getElementById('p_father').textContent =
+    [d.fatherName, d.fatherAge && d.fatherAge+' ปี', d.fatherOcc].filter(Boolean).join(', ') || '-';
+  document.getElementById('p_mother').textContent =
+    [d.motherName, d.motherAge && d.motherAge+' ปี', d.motherOcc].filter(Boolean).join(', ') || '-';
+  document.getElementById('p_spouse').textContent =
+    [d.spouseName, d.spouseAge && d.spouseAge+' ปี', d.spouseOcc].filter(Boolean).join(', ') || '-';
+  document.getElementById('p_siblings').textContent =
+    (d.siblings ? d.siblings+' คน' : '-') + (d.siblingsM ? ' (ชาย '+d.siblingsM+')' : '') + (d.siblingsF ? ' (หญิง '+d.siblingsF+')' : '');
+
+  // Experience
+  document.getElementById('p_hasSales').textContent = d.hasSales || '-';
+  document.getElementById('p_salesDetail').textContent = d.salesDetail || '-';
+  document.getElementById('p_canRead').textContent = d.canRead || '-';
+  document.getElementById('p_canSunday').textContent = d.canSunday || '-';
+
+  // Work history
+  document.getElementById('p_work1').textContent = d.work1 || '-';
+  document.getElementById('p_work2').textContent = d.work2 || '-';
+
+  // Emergency
+  document.getElementById('p_em1Name').textContent = d.em1Name || '-';
+  document.getElementById('p_em1Phone').textContent = d.em1Phone || '-';
+  document.getElementById('p_em1Fb').textContent = d.em1Fb || '-';
+  document.getElementById('p_em2Name').textContent = d.em2Name || '-';
+  document.getElementById('p_em2Phone').textContent = d.em2Phone || '-';
+  document.getElementById('p_em2Fb').textContent = d.em2Fb || '-';
+
+  // Docs
+  const docs = [];
+  if (d.docId)    docs.push('สำเนาบัตรประชาชน');
+  if (d.docHouse) docs.push('สำเนาทะเบียนบ้าน');
+  if (d.docEdu)   docs.push('วุฒิการศึกษา');
+  if (d.docPhoto) docs.push('รูปถ่าย');
+  document.getElementById('p_docs').textContent = docs.length ? docs.join(', ') : 'ไม่มีเอกสารแนบ';
+}
+
+function showMsg(text, type) {
+  const m = document.getElementById('msg');
+  m.textContent = text;
+  m.className = 'msg ' + type;
+  setTimeout(() => { m.className = 'msg'; }, 4000);
+}
+
+function submitForm() {
+  const err = validateForm();
+  if (err) { showMsg(err, 'error'); return; }
+  const d = getFormData();
+  fillPrintArea(d);
+  window.print();
+}
+
+function exportJSON() {
+  const err = validateForm();
+  if (err) { showMsg(err, 'error'); return; }
+  const d = getFormData();
+  const json = JSON.stringify(d, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const name = (d.fname + '_' + d.lname).replace(/\s+/g,'_') || 'application';
+  a.href = url; a.download = name + '.json'; a.click();
+  URL.revokeObjectURL(url);
+  showMsg('ดาวน์โหลดไฟล์ JSON สำเร็จ', 'success');
+}
+
+function previewDoc(input, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById(previewId + '_img').src = e.target.result;
+    document.getElementById(previewId + '_name').textContent = file.name;
+    document.getElementById(previewId).style.display = 'block';
+    // auto-check the checkbox
+    const card = input.closest('.doc-item');
+    const cb = card.querySelector('input[type=checkbox]');
+    if (cb) cb.checked = true;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeDoc(previewId, checkboxName) {
+  document.getElementById(previewId + '_img').src = '';
+  document.getElementById(previewId + '_name').textContent = '';
+  document.getElementById(previewId).style.display = 'none';
+  const cb = document.querySelector('[name="' + checkboxName + '"]');
+  if (cb) cb.checked = false;
+  // clear file input
+  const card = document.getElementById(previewId).closest('.doc-item');
+  const fi = card.querySelector('input[type=file]');
+  if (fi) fi.value = '';
+}
+
+function resetForm() {
+  if (!confirm('ล้างข้อมูลทั้งหมด?')) return;
+  document.getElementById('appForm').reset();
+  document.getElementById('childrenAgeField').style.display = 'none';
+  document.getElementById('childrenAges').innerHTML = '';
+  ['prevId','prevHouse','prevEdu','prevPhoto'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+    document.getElementById(id + '_img').src = '';
+    document.getElementById(id + '_name').textContent = '';
+  });
+}
+</script>
+</body>
+</html>
