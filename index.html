@@ -479,6 +479,14 @@ function getFormData() {
   ['docId','docHouse','docEdu','docPhoto'].forEach(n => {
     data[n] = document.querySelector('[name="' + n + '"]').checked;
   });
+  // เก็บ base64 ของรูปเอกสารแนบ
+  const docMap = { docId: 'prevId', docHouse: 'prevHouse', docEdu: 'prevEdu', docPhoto: 'prevPhoto' };
+  Object.entries(docMap).forEach(([key, previewId]) => {
+    const img = document.getElementById(previewId + '_img');
+    if (img && img.src && img.src.startsWith('data:')) {
+      data[key + '_img'] = img.src;
+    }
+  });
   return data;
 }
 
