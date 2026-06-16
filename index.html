@@ -590,7 +590,7 @@ function downloadImage() {
   const area = document.getElementById('printArea');
   area.style.display = 'block';
 
-  html2canvas(area, { scale: 2, useCORS: true, backgroundColor: '#fff' }).then(canvas => {
+  html2canvas(area, { scale: 2, useCORS: true, backgroundColor: '#fff', width: 794, windowWidth: 794 }).then(canvas => {
     const link = document.createElement('a');
     const name = (d.fname + '_' + d.lname).replace(/\s+/g,'_') || 'ใบสมัคร';
     link.download = name + '.png';
@@ -616,7 +616,7 @@ function submitForm() {
   const area = document.getElementById('printArea');
   area.style.display = 'block';
 
-  html2canvas(area, { scale: 2, useCORS: true, backgroundColor: '#fff' }).then(canvas => {
+  html2canvas(area, { scale: 2, useCORS: true, backgroundColor: '#fff', width: 794, windowWidth: 794 }).then(canvas => {
     area.style.display = 'none';
     d.imageBase64 = canvas.toDataURL('image/png');
 
