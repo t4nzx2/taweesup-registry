@@ -91,6 +91,21 @@
   .print-area .sec { font-weight: bold; margin-top: 8px; border-bottom: 1px solid #000; }
   .print-area .sign-line { margin-top: 36px; text-align: center; }
   .print-area .sign-line span { display: inline-block; border-top: 1px solid #000; min-width: 200px; padding-top: 4px; }
+
+  /* CONTRACT */
+  .contract-box {
+    background: #fffef5; border: 2px solid #c8a400; border-radius: 10px;
+    padding: 24px 28px; font-size: 16px; line-height: 1.9; color: #222;
+  }
+  .contract-box h3 { text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+  .contract-box .sub { text-align: center; font-size: 14px; color: #666; margin-bottom: 16px; }
+  .contract-box ol { padding-left: 24px; margin: 12px 0; }
+  .contract-box ol li { margin-bottom: 6px; }
+  .contract-box .confirm-para { margin-top: 16px; border-top: 1px dashed #ccc; padding-top: 14px; font-style: italic; color: #444; }
+  .contract-agree { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding: 14px 16px;
+    background: #fff8e1; border: 1.5px solid #f0c000; border-radius: 8px; cursor: pointer; }
+  .contract-agree input[type=checkbox] { width: 22px; height: 22px; cursor: pointer; flex-shrink: 0; }
+  .contract-agree span { font-size: 16px; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -101,6 +116,36 @@
   <p class="subtitle">กรอกข้อมูลให้ครบถ้วนแล้วกด "ส่งใบสมัคร"</p>
 
   <form id="appForm" novalidate>
+
+    <!-- สัญญาจ้างงาน -->
+    <div class="card">
+      <div class="section-title">หนังสือสัญญาจ้างงาน — กรุณาอ่านก่อนกรอกใบสมัคร</div>
+      <div class="contract-box">
+        <h3>หนังสือสัญญาจ้างงาน</h3>
+        <div class="sub">เขียนที่ บ้านเลขที่ 81/27 ม.4 ต.ม่วงงาม อ.สิงหนคร จ.สงขลา 90330</div>
+
+        <p>หนังสือสัญญาฉบับนี้จัดทำขึ้นระหว่าง <strong>ปาวิณา ไชยเวทย์ (นายจ้าง)</strong> กับลูกจ้าง</p>
+        <p style="margin-top:8px">ตำแหน่ง ………………………………… <strong>ตามอัตราค่าจ้างแรงงานขั้นต่ำ คิดเป็นรายวันของวันที่ทำงานจริง</strong></p>
+        <p style="margin-top:4px">เริ่มสัญญาจ้างตั้งแต่ วันที่ ……………………………………</p>
+        <p style="margin-top:8px">จ้างงานใน ตำแหน่ง …………… <strong>ตามอัตราค่าจ้างแรงงานเป็นรายวันขั้นต่ำ</strong></p>
+
+        <ol style="margin-top:14px">
+          <li>ออกแจ้งล่วงหน้า <strong>1 เดือน</strong></li>
+          <li>มีเงินค้ำประกันความเสียหายในการทำงาน กรณีของสูญหาย จำนวน ………………… บาท</li>
+          <li>นายจ้างขอสงวนสิทธิ์ในเรื่องการบริหารเวลาการทำงาน เปลี่ยนแปลงสถานที่ทำงาน วันหยุด วันพักทุกประเภท โดยจะแจ้งเป็นครั้งคราวไป</li>
+        </ol>
+
+        <div class="confirm-para">
+          ข้าพเจ้า ได้อ่านข้อความดังกล่าวด้วยมีสติสัมปชัญญะครบถ้วน อ่านออกเขียนได้ และไม่มีข้อโต้แย้งใดๆ
+          ในข้อตกลงดังกล่าว ข้าพเจ้ายอมรับในเงื่อนไขดังกล่าวทุกประการ
+        </div>
+
+        <label class="contract-agree">
+          <input type="checkbox" id="agreeContract">
+          <span>ข้าพเจ้าได้อ่านและยอมรับเงื่อนไขในหนังสือสัญญาจ้างงานทุกประการ *</span>
+        </label>
+      </div>
+    </div>
 
     <!-- ข้อมูลส่วนตัว -->
     <div class="card">
@@ -352,6 +397,7 @@ function validateForm() {
   if (!getRadio('canHoliday'))  return 'กรุณาเลือก: ทำงานวันหยุดได้หรือไม่';
   if (!getRadio('canTransfer')) return 'กรุณาเลือก: โยกย้ายสาขาได้หรือไม่';
   if (!getRadio('canSunday'))   return 'กรุณาเลือก: ทำงานวันอาทิตย์ได้หรือไม่';
+  if (!document.getElementById('agreeContract').checked) return 'กรุณายอมรับเงื่อนไขในหนังสือสัญญาจ้างงาน';
   return null;
 }
 
