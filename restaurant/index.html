@@ -92,6 +92,25 @@
   .print-area .sign-line { margin-top: 36px; text-align: center; }
   .print-area .sign-line span { display: inline-block; border-top: 1px solid #000; min-width: 200px; padding-top: 4px; }
 
+  /* เอกสารแนบ */
+  .docs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .doc-item { border: 1.5px solid #ddd; border-radius: 10px; padding: 16px; }
+  .doc-item label.doc-label { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; margin-bottom: 12px; cursor: pointer; }
+  .doc-item label.doc-label input[type=checkbox] { width: 20px; height: 20px; cursor: pointer; }
+  .doc-upload-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f5f5f5; border: 1.5px dashed #aaa; border-radius: 8px;
+    padding: 10px 18px; cursor: pointer; font-size: 15px; font-weight: 700;
+    color: #555; transition: .2s;
+  }
+  .doc-upload-btn:hover { background: #e8f5ec; border-color: #1a6b3c; color: #1a6b3c; }
+  .doc-upload-btn input[type=file] { display: none; }
+  .doc-preview { margin-top: 10px; display: none; }
+  .doc-preview img { max-width: 100%; max-height: 160px; border-radius: 6px; border: 1px solid #ddd; object-fit: cover; }
+  .doc-preview .doc-filename { font-size: 13px; color: #666; margin-top: 4px; word-break: break-all; }
+  .doc-remove { background: none; border: none; color: #c00; cursor: pointer; font-size: 13px; font-weight: 700; margin-top: 4px; padding: 0; }
+  @media (max-width: 600px) { .docs-grid { grid-template-columns: 1fr; } }
+
   /* CONTRACT */
   .contract-box {
     background: #fffef5; border: 2px solid #c8a400; border-radius: 10px;
@@ -209,19 +228,12 @@
     <!-- ความสามารถ -->
     <div class="card">
       <div class="section-title">ความสามารถและเงื่อนไข</div>
-      <div class="grid grid-3">
+      <div class="grid grid-2">
         <div class="field">
           <label>ทำงานในวันหยุดได้หรือไม่ *</label>
           <div class="radio-group">
             <label><input type="radio" name="canHoliday" value="ได้"> ได้</label>
             <label><input type="radio" name="canHoliday" value="ไม่ได้"> ไม่ได้</label>
-          </div>
-        </div>
-        <div class="field">
-          <label>โยกย้ายสาขาได้หรือไม่ *</label>
-          <div class="radio-group">
-            <label><input type="radio" name="canTransfer" value="ได้"> ได้</label>
-            <label><input type="radio" name="canTransfer" value="ไม่ได้"> ไม่ได้</label>
           </div>
         </div>
         <div class="field">
@@ -261,6 +273,87 @@
           <div class="field"><label>โทรศัพท์</label><input name="em2Phone" type="tel"></div>
           <div class="field"><label>เฟสบุ๊ก</label><input name="em2Fb"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- เอกสารแนบ -->
+    <div class="card">
+      <div class="section-title">เอกสารที่แนบมา</div>
+      <div class="docs-grid">
+        <div class="doc-item">
+          <label class="doc-label"><input type="checkbox" name="docId"> สำเนาบัตรประชาชน *</label>
+          <label class="doc-upload-btn">
+            <span>📎 เพิ่มไฟล์รูปภาพ</span>
+            <input type="file" accept="image/*" onchange="previewDoc(this,'prevId')">
+          </label>
+          <div class="doc-preview" id="prevId">
+            <img id="prevId_img" src="" alt="">
+            <div class="doc-filename" id="prevId_name"></div>
+            <button class="doc-remove" onclick="removeDoc('prevId','docId')">✕ ลบไฟล์</button>
+          </div>
+        </div>
+        <div class="doc-item">
+          <label class="doc-label"><input type="checkbox" name="docHouse"> สำเนาทะเบียนบ้าน *</label>
+          <label class="doc-upload-btn">
+            <span>📎 เพิ่มไฟล์รูปภาพ</span>
+            <input type="file" accept="image/*" onchange="previewDoc(this,'prevHouse')">
+          </label>
+          <div class="doc-preview" id="prevHouse">
+            <img id="prevHouse_img" src="" alt="">
+            <div class="doc-filename" id="prevHouse_name"></div>
+            <button class="doc-remove" onclick="removeDoc('prevHouse','docHouse')">✕ ลบไฟล์</button>
+          </div>
+        </div>
+        <div class="doc-item">
+          <label class="doc-label"><input type="checkbox" name="docEdu"> วุฒิการศึกษา</label>
+          <label class="doc-upload-btn">
+            <span>📎 เพิ่มไฟล์รูปภาพ</span>
+            <input type="file" accept="image/*" onchange="previewDoc(this,'prevEdu')">
+          </label>
+          <div class="doc-preview" id="prevEdu">
+            <img id="prevEdu_img" src="" alt="">
+            <div class="doc-filename" id="prevEdu_name"></div>
+            <button class="doc-remove" onclick="removeDoc('prevEdu','docEdu')">✕ ลบไฟล์</button>
+          </div>
+        </div>
+        <div class="doc-item">
+          <label class="doc-label"><input type="checkbox" name="docPhoto"> รูปถ่าย *</label>
+          <label class="doc-upload-btn">
+            <span>📎 เพิ่มไฟล์รูปภาพ</span>
+            <input type="file" accept="image/*" onchange="previewDoc(this,'prevPhoto')">
+          </label>
+          <div class="doc-preview" id="prevPhoto">
+            <img id="prevPhoto_img" src="" alt="">
+            <div class="doc-filename" id="prevPhoto_name"></div>
+            <button class="doc-remove" onclick="removeDoc('prevPhoto','docPhoto')">✕ ลบไฟล์</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- หนังสือสัญญาจ้างงาน -->
+    <div class="card">
+      <div class="section-title">หนังสือสัญญาจ้างงาน — กรุณาอ่านก่อนกรอกใบสมัคร</div>
+      <div class="contract-box">
+        <h3>หนังสือสัญญาจ้างงาน</h3>
+        <div class="sub">เขียนที่ บ้านเลขที่ 81/27 ม.4 ต.ม่วงงาม อ.สิงหนคร จ.สงขลา 90330</div>
+        <p>หนังสือสัญญาฉบับนี้จัดทำขึ้นระหว่าง <strong>ปาวิณา ไชยเวทย์ (นายจ้าง)</strong> กับลูกจ้าง</p>
+        <p style="margin-top:8px">ตำแหน่ง ………………………………… <strong>ตามอัตราค่าจ้างแรงงานขั้นต่ำ คิดเป็นรายวันของวันที่ทำงานจริง</strong></p>
+        <p style="margin-top:4px">เริ่มสัญญาจ้างตั้งแต่ วันที่ ……………………………………</p>
+        <p style="margin-top:8px">จ้างงานใน ตำแหน่ง …………… <strong>ตามอัตราค่าจ้างแรงงานเป็นรายวันขั้นต่ำ</strong></p>
+        <ol style="margin-top:14px">
+          <li>ออกแจ้งล่วงหน้า <strong>1 เดือน</strong></li>
+          <li>มีเงินค้ำประกันความเสียหายในการทำงาน กรณีของสูญหาย จำนวน ………………… บาท</li>
+          <li>นายจ้างขอสงวนสิทธิ์ในเรื่องการบริหารเวลาการทำงาน เปลี่ยนแปลงสถานที่ทำงาน วันหยุด วันพักทุกประเภท โดยจะแจ้งเป็นครั้งคราวไป</li>
+        </ol>
+        <div class="confirm-para">
+          ข้าพเจ้า ได้อ่านข้อความดังกล่าวด้วยมีสติสัมปชัญญะครบถ้วน อ่านออกเขียนได้ และไม่มีข้อโต้แย้งใดๆ
+          ในข้อตกลงดังกล่าว ข้าพเจ้ายอมรับในเงื่อนไขดังกล่าวทุกประการ
+        </div>
+        <label class="contract-agree">
+          <input type="checkbox" id="agreeContract">
+          <span>ข้าพเจ้าได้อ่านและยอมรับเงื่อนไขในหนังสือสัญญาจ้างงานทุกประการ *</span>
+        </label>
       </div>
     </div>
 
@@ -309,7 +402,6 @@
   <div class="sec">ความสามารถและเงื่อนไข</div>
   <table>
     <tr><td class="lbl">ทำงานวันหยุดได้</td><td><span class="dots" id="p_canHoliday"></span></td>
-        <td class="lbl">โยกย้ายสาขาได้</td><td><span class="dots" id="p_canTransfer"></span></td>
         <td class="lbl">ทำงานวันอาทิตย์ได้</td><td><span class="dots" id="p_canSunday"></span></td></tr>
   </table>
 
@@ -355,7 +447,15 @@ function getFormData() {
   const data = {};
   form.querySelectorAll('input:not([type=radio]):not([type=checkbox]), textarea, select')
     .forEach(el => { if (el.name) data[el.name] = el.value.trim(); });
-  ['status','living','canHoliday','canTransfer','canSunday'].forEach(n => { data[n] = getRadio(n); });
+  ['status','living','canHoliday','canSunday'].forEach(n => { data[n] = getRadio(n); });
+  ['docId','docHouse','docEdu','docPhoto'].forEach(n => {
+    data[n] = document.querySelector('[name="' + n + '"]').checked;
+  });
+  const docMap = { docId: 'prevId', docHouse: 'prevHouse', docEdu: 'prevEdu', docPhoto: 'prevPhoto' };
+  Object.entries(docMap).forEach(([key, previewId]) => {
+    const img = document.getElementById(previewId + '_img');
+    if (img && img.src && img.src.startsWith('data:')) data[key + '_img'] = img.src;
+  });
   return data;
 }
 
@@ -365,8 +465,11 @@ function validateForm() {
   if (!d.age)    return 'กรุณากรอกอายุ';
   if (!d.phone)  return 'กรุณากรอกเบอร์มือถือ';
   if (!getRadio('canHoliday'))  return 'กรุณาเลือก: ทำงานวันหยุดได้หรือไม่';
-  if (!getRadio('canTransfer')) return 'กรุณาเลือก: โยกย้ายสาขาได้หรือไม่';
   if (!getRadio('canSunday'))   return 'กรุณาเลือก: ทำงานวันอาทิตย์ได้หรือไม่';
+  if (!document.querySelector('[name="docId"]').checked)    return 'กรุณาแนบสำเนาบัตรประชาชน';
+  if (!document.querySelector('[name="docHouse"]').checked) return 'กรุณาแนบสำเนาทะเบียนบ้าน';
+  if (!document.querySelector('[name="docPhoto"]').checked) return 'กรุณาแนบรูปถ่าย';
+  if (!document.getElementById('agreeContract').checked)    return 'กรุณายอมรับเงื่อนไขในหนังสือสัญญาจ้างงาน';
   return null;
 }
 
@@ -407,7 +510,6 @@ function fillPrintArea(d) {
     (d.siblingsF ? ' (หญิง '+d.siblingsF+')' : '');
 
   document.getElementById('p_canHoliday').textContent = d.canHoliday || '-';
-  document.getElementById('p_canTransfer').textContent = d.canTransfer || '-';
   document.getElementById('p_canSunday').textContent = d.canSunday || '-';
   document.getElementById('p_work1').textContent = d.work1 || '-';
   document.getElementById('p_work2').textContent = d.work2 || '-';
@@ -470,6 +572,35 @@ function resetForm() {
   if (!confirm('ล้างข้อมูลทั้งหมด?')) return;
   document.getElementById('appForm').reset();
   document.getElementById('rentField').style.display = 'none';
+  ['prevId','prevHouse','prevEdu','prevPhoto'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.display = 'none'; document.getElementById(id+'_img').src = ''; }
+  });
+  document.getElementById('agreeContract').checked = false;
+}
+
+function previewDoc(input, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById(previewId + '_img').src = e.target.result;
+    document.getElementById(previewId + '_name').textContent = file.name;
+    document.getElementById(previewId).style.display = 'block';
+    const cb = input.closest('.doc-item').querySelector('input[type=checkbox]');
+    if (cb) cb.checked = true;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeDoc(previewId, checkboxName) {
+  document.getElementById(previewId + '_img').src = '';
+  document.getElementById(previewId + '_name').textContent = '';
+  document.getElementById(previewId).style.display = 'none';
+  const cb = document.querySelector('[name="' + checkboxName + '"]');
+  if (cb) cb.checked = false;
+  const fi = document.getElementById(previewId).closest('.doc-item').querySelector('input[type=file]');
+  if (fi) fi.value = '';
 }
 </script>
 </body>
